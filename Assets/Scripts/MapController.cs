@@ -14,6 +14,7 @@ public class MapController : MonoBehaviour {
 	[SerializeField] private float initial_Y = -1.0f;
 	[SerializeField] private GameObject mapAreaIndicator;
 	[SerializeField] private GameObject mapBoundingBox;
+
 	public float currentZoom {
 		get => map.Zoom;
 		set => MapZoomUpdate(value);
@@ -22,15 +23,15 @@ public class MapController : MonoBehaviour {
 	public Vector2d centerCoord {
 		get => map.CenterLatitudeLongitude;
 	}
+
 	private Vector2d mapCenter = new Vector2d(35.3611236, 138.7266352);
-//    private Util util = Util();
 
 	// Start is called before the first frame update
 	private void Start() {
 		map = gameObject.GetComponent<AbstractMap>();
 		if (map == null) return;
-		
-		var mapInitialPosition = new Vector3(0,initial_Y,0);
+
+		var mapInitialPosition = new Vector3(0, initial_Y, 0);
 		map.transform.parent.localPosition = mapInitialPosition;
 
 		map.MapVisualizer.OnMapVisualizerStateChanged += (ModuleState s) => {
@@ -85,7 +86,6 @@ public class MapController : MonoBehaviour {
 	}
 
 	public void MapZoomUpdate(float zoom) {
-		Debug.Log($"{zoom:F2}");
 		if (map == null) return;
 		var currentZoom = map.AbsoluteZoom;
 		if ((int) zoom == currentZoom) return;
@@ -118,21 +118,14 @@ public class MapController : MonoBehaviour {
 
 		//height in unity units
 		var height = tile.QueryHeightData(Dx, Dy);
+		Debug.Log($"Height :{height:F2}");
 		return height;
 	}
 
 	public void adjustMapHeight(float targetHeight) {
 		var centerHeight = GetHeightFromCoordinate(map.CenterLatitudeLongitude);
-		
-		if (targetHeight >= centerHeight) {
-			var diff = targetHeight - centerHeight;
-			var currentMapPosition = map.transform.parent.localPosition;
-			map.transform.parent.localPosition = new Vector3(currentMapPosition.x, currentMapPosition.y + diff, currentMapPosition.z);
-		}
-		else {
-			var diff = centerHeight - targetHeight;
-			var currentMapPosition = map.transform.parent.localPosition;
-			map.transform.parent.localPosition = new Vector3(currentMapPosition.x, currentMapPosition.y - diff, currentMapPosition.z);
-		}
+		var diff = targetHeight - centerHeight;
+		var currentMapPosition = map.transform.parent.localPosition;
+		map.transform.parent.localPosition = new Vector3(currentMapPosition.x, diff, currentMapPosition.z);
 	}
 }

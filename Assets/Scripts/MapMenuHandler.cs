@@ -58,8 +58,7 @@ public class MapMenuHandler : MonoBehaviour {
 		ObjectManipulator manipulator = mapBoundingBox.GetComponent<ObjectManipulator>();
 		if (handler != null) handler.enabled = false;
 		if (handConstraint != null) handConstraint.enabled = false;
-		if (boundingBox != null) boundingBox.enabled = false;
-		if (manipulator != null) manipulator.enabled = false;
+		mapBoundingBox.SetActive(false);
 	}
 
 	void Update() {
@@ -115,7 +114,6 @@ public class MapMenuHandler : MonoBehaviour {
 		if (mapController == null) return;
 		mapController.MapTiltUpdate(mapTilt);
 	}
-
 	
 	private void MapAreaUpdate(float scale) {
 		if (mapAreaIndicator == null) return;
@@ -136,8 +134,7 @@ public class MapMenuHandler : MonoBehaviour {
 		if (handler == null || handConstraint == null || mapBoundingBox == null) return;
 		handler.enabled = false;
 		handConstraint.enabled = false;
-		mapBoundingBox.GetComponent<BoundsControl>().enabled = false;
-		mapBoundingBox.GetComponent<ObjectManipulator>().enabled = false;
+		mapBoundingBox.SetActive(false);
 	}
 
 	public void OnMoveButtonPressed() {
@@ -145,18 +142,14 @@ public class MapMenuHandler : MonoBehaviour {
 
 		var handler = mapParent.GetComponent<SolverHandler>();
 		var handConstraint = mapParent.GetComponent<HandConstraint>();
-		var boundingBox = mapBoundingBox.GetComponent<BoundsControl>();
-		var manipulator = mapBoundingBox.GetComponent<ObjectManipulator>();
 		var mapRotation = mapParent.transform.rotation;
 
-		if (handler == null || handConstraint == null || mapBoundingBox == null || boundingBox == null ||
-		    manipulator == null) return;
+		if (handler == null || handConstraint == null || mapBoundingBox == null) return;
 
 		//Moveを押した瞬間に手にMAPを吸い寄せる
 		handler.enabled = true;
 		handConstraint.enabled = true;
-		boundingBox.enabled = true;
-		manipulator.enabled = true;
+		mapBoundingBox.SetActive(true);
 
 		StartCoroutine(Util.DelayMethod(10,
 			() => {
